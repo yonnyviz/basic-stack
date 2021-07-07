@@ -1,0 +1,3 @@
+volumes
+.vscode
+./apps/aritmetic-ms/src/node_modules

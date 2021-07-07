@@ -1,0 +1,44 @@
+version: "3.3"
+services:
+  loadbalancer:
+    image: nginx
+    volumes:
+     - ./volumes/templates:/etc/nginx/templates
+    ports:
+     - "8080:80"
+    environment:
+     - NGINX_HOST=foobar.com
+     - NGINX_PORT=80
+  aritmetic-ws:
+    image: aritmetic
+    build: ./apps/aritmetic-ms
+    ports:
+     - "3000:3000"
+  db:
+    image: postgres
+    volumes:
+      - ./volumes/db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 4040:8080
+  jenkins:
+    user: root
+    image: "jenkinsci/blueocean:1.23.1"
+    ports:
+      - "7070:8080"
+    volumes:
+      - ./volumes/jenkins_home:/var/jenkins_home
+      - /usr/local/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+  sonarqube:
+    image: "sonarqube"
+    ports:
+      - "9000:9000"
